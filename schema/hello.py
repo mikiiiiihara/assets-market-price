@@ -27,10 +27,10 @@ def fetch_data_from_api(id: int) -> Optional[ApiResponse]:
         return None
 
 def process_data_with_pandas(data: ApiResponse, id: int) -> dict:
+    print("---- data -----")
+    print(data)
     if data and "datasets" in data:
         df = pd.DataFrame(data["datasets"])
-        print("---- df -----")
-        print(df)
         fund = {
             "id": id,  # 引数で渡されたIDを使用
             "fundName": df.iloc[0]["fund_name"],
@@ -40,7 +40,7 @@ def process_data_with_pandas(data: ApiResponse, id: int) -> dict:
         }
         return fund
     else:
-        return {"id": 0, "fundName": "", "nav": 0.0}
+        return {"id": 0, "fundName": "", "currentPrice": 0.0, "currentPriceGets": 0.0,"currentRate": 0.0}
 
 def resolve_hello(*_, id: int) -> dict:
     data = fetch_data_from_api(id)
