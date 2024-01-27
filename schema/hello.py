@@ -22,7 +22,11 @@ def fetch_data_from_api(id: int) -> Optional[ApiResponse]:
         raise RuntimeError("MUFG_API_BASE_URL environment variable is not set")
 
     url = f"{base_url}/fund_information_latest/fund_cd/{id}"
+    print("---- url -----")
+    print(url)
     response = requests.get(url)
+    print("---- response -----")
+    print(response)
     if response.status_code == 200:
         return json.loads(response.text)
     else:
