@@ -26,11 +26,11 @@ def fetch_data_from_api(id: int) -> Optional[ApiResponse]:
     else:
         return None
 
-def process_data_with_pandas(data: ApiResponse) -> dict:
+def process_data_with_pandas(data: ApiResponse, id: int) -> dict:
     if data and "datasets" in data:
         df = pd.DataFrame(data["datasets"])
         fund = {
-            "id": "253266",  # IDは固定値または動的に設定
+            "id": id,  # 引数で渡されたIDを使用
             "fundName": df.iloc[0]["fund_name"],
             "currentPrice": float(df.iloc[0]["nav"]),
             "currentPriceGets": float(df.iloc[0]["cmp_prev_day"]),
@@ -38,9 +38,9 @@ def process_data_with_pandas(data: ApiResponse) -> dict:
         }
         return fund
     else:
-        return {"id": "", "fundName": "", "nav": 0.0}
+        return {"id": 0, "fundName": "", "nav": 0.0}
 
 def resolve_hello(*_, id: int) -> dict:
     data = fetch_data_from_api(id)
-    fund_data = process_data_with_pandas(data)
+    fund_data = process_data_with_pandas(data, id)
     return fund_data
