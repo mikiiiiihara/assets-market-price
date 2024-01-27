@@ -29,6 +29,8 @@ def fetch_data_from_api(id: int) -> Optional[ApiResponse]:
 def process_data_with_pandas(data: ApiResponse, id: int) -> dict:
     if data and "datasets" in data:
         df = pd.DataFrame(data["datasets"])
+        print("---- df -----")
+        print(df)
         fund = {
             "id": id,  # 引数で渡されたIDを使用
             "fundName": df.iloc[0]["fund_name"],
