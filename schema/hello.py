@@ -16,6 +16,8 @@ class ApiResponse(TypedDict):
 
 def fetch_data_from_api(id: int) -> Optional[ApiResponse]:
     base_url = os.environ.get("MUFG_API_BASE_URL")
+    print("---- base_url -----")
+    print(base_url)
     if not base_url:
         raise RuntimeError("MUFG_API_BASE_URL environment variable is not set")
 
@@ -27,8 +29,6 @@ def fetch_data_from_api(id: int) -> Optional[ApiResponse]:
         return None
 
 def process_data_with_pandas(data: ApiResponse, id: int) -> dict:
-    print("---- data -----")
-    print(data)
     if data and "datasets" in data:
         df = pd.DataFrame(data["datasets"])
         fund = {
