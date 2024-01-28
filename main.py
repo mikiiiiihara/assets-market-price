@@ -2,7 +2,7 @@ from ariadne import QueryType, make_executable_schema
 from ariadne.asgi import GraphQL
 from fastapi import FastAPI
 
-from schema.hello import resolve_hello
+from schema.mufg_fund import resolve_mufg_fund
 
 from dotenv import load_dotenv
 
@@ -12,7 +12,7 @@ load_dotenv()  # .env ファイルから環境変数を読み込む
 query = QueryType()
 
 # リゾルバー関数を登録
-query.set_field("hello", resolve_hello)
+query.set_field("mufgFunds", resolve_mufg_fund)
 
 type_defs = """
     type Fund {
@@ -23,7 +23,7 @@ type_defs = """
         currentRate: Float
     }
     type Query {
-        hello(id: Int!): Fund
+        mufgFunds(ids: [Int!]!): [Fund!]!
     }
 """
 

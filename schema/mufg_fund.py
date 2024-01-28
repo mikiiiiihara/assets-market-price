@@ -16,20 +16,12 @@ class ApiResponse(TypedDict):
 
 def fetch_data_from_api(id: int) -> Optional[ApiResponse]:
     base_url = os.environ.get("MUFG_API_BASE_URL")
-    print("---- base_url -----")
-    print(base_url)
     if not base_url:
         raise RuntimeError("MUFG_API_BASE_URL environment variable is not set")
 
     url = f"{base_url}/fund_information_latest/fund_cd/{id}"
-    print("---- url -----")
-    print(url)
     headers = {'Content-Type': 'application/json'}
     response = requests.get(url, headers=headers)
-    print("---- response -----")
-    print("Status Code:", response.status_code)
-    print("Headers:", response.headers)
-    print("Response Body:", response.text)
     if response.status_code == 200:
         return json.loads(response.text)
     else:
@@ -49,7 +41,11 @@ def process_data_with_pandas(data: ApiResponse, id: int) -> dict:
     else:
         return {"id": 0, "fundName": "", "currentPrice": 0.0, "currentPriceGets": 0.0,"currentRate": 0.0}
 
-def resolve_hello(*_, id: int) -> dict:
-    data = fetch_data_from_api(id)
-    fund_data = process_data_with_pandas(data, id)
-    return fund_data
+def resolve_mufg_fund(*_, ids: List[int]) -> List[dict]:
+    funds = []
+    for id in ids:
+        data = fetch_data_from_api(id)
+        fund_data = process_data_with_pandas(data, id)
+        funds.append(fund_data)
+    return funds
+
