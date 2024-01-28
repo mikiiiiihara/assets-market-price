@@ -1,24 +1,25 @@
 import yfinance as yf
 from datetime import datetime, timedelta
 from typing import List
-from concurrent.futures import ThreadPoolExecutor
-
-def fetch_single_stock_data(ticker: str):
-    one_year_ago = datetime.now() - timedelta(days=365)
-    stock = yf.Ticker(ticker)
-    current_price = stock.info.get("currentPrice") or stock.info.get("bid")
-    dividends = stock.dividends[stock.dividends.index >= one_year_ago.strftime("%Y-%m-%d")]
-
-    return {
-        "ticker": ticker,
-        "market_price": current_price,
-        "dividends": dividends.to_dict()
-    }
 
 def fetch_stock_data(tickers: List[str]):
-    with ThreadPoolExecutor(max_workers=len(tickers)) as executor:
-        results = list(executor.map(fetch_single_stock_data, tickers))
-    return results
+    one_year_ago = datetime.now() - timedelta(days=365)
+    tickers_str = ' '.join(tickers)
+    stocks = yf.Tickers(tickers_str)
+
+    stock_data = []
+    for ticker in tickers:
+        stock = stocks.tickers[ticker.upper()]
+        current_price = stock.info.get("currentPrice") or stock.info.get("bid")
+        dividends = stock.dividends[stock.dividends.index >= one_year_ago.strftime("%Y-%m-%d")]
+
+        stock_data.append({
+            "ticker": ticker,
+            "market_price": current_price,
+            "dividends": dividends.to_dict()
+        })
+
+    return stock_data
 
 def resolve_stocks(*_, tickers: List[str]):
     data = fetch_stock_data(tickers)
@@ -30,4 +31,3 @@ def resolve_stocks(*_, tickers: List[str]):
         }
         for stock in data
     ]
-
