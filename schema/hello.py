@@ -26,7 +26,7 @@ def fetch_data_from_api(id: int) -> Optional[ApiResponse]:
     print(url)
     response = requests.get(url)
     print("---- response -----")
-    print("Status Code:", response.status_code)
+    print("Status Code:", response.request)
     print("Headers:", response.headers)
     print("Response Body:", response.text)
     if response.status_code == 200:
