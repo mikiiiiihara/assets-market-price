@@ -3,6 +3,7 @@ from ariadne.asgi import GraphQL
 from fastapi import FastAPI
 
 from schema.mufg_fund import resolve_mufg_fund
+from schema.stock import resolve_stocks
 
 from dotenv import load_dotenv
 
@@ -13,6 +14,7 @@ query = QueryType()
 
 # リゾルバー関数を登録
 query.set_field("mufgFunds", resolve_mufg_fund)
+query.set_field("stocks", resolve_stocks)
 
 type_defs = """
     type Fund {
@@ -22,8 +24,19 @@ type_defs = """
         currentPriceGets: Float
         currentRate: Float
     }
+        type Stock {
+        ticker: String
+        marketPrice: Float
+        dividends: [Dividend]
+    }
+
+    type Dividend {
+        date: String
+        value: Float
+    }
     type Query {
         mufgFunds(ids: [Int!]!): [Fund!]!
+        stocks(tickers: [String!]): [Stock!]!
     }
 """
 
