@@ -24,9 +24,10 @@ def fetch_data_from_api(id: int) -> Optional[ApiResponse]:
     url = f"{base_url}/fund_information_latest/fund_cd/{id}"
     print("---- url -----")
     print(url)
-    response = requests.get(url)
+    headers = {'Content-Type': 'application/json'}
+    response = requests.get(url, headers=headers)
     print("---- response -----")
-    print("Status Code:", response.request)
+    print("Status Code:", response.status_code)
     print("Headers:", response.headers)
     print("Response Body:", response.text)
     if response.status_code == 200:
